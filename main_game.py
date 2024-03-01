@@ -10,11 +10,13 @@ mixer.init()
 screen = pygame.display.set_mode((700, 700)) #(screen size x, screen size y)
 clock = pygame.time.Clock()
 running = True
-background_image = generate_ground(100)
+background = generate_ground(100)
+background_image = background[0]
+background_hitbox = background[1]
 
 #class initialize
 walker = enemy("Walker", "pass", 10, 2, 2, "Walker", "pass", "pass", "pass", "pass", "pass", "pass", "none", 150, 391, screen)
-player = player("Player", "pass", 10, 10, 20, "Walker", "pass", "pass", "pass", "pass", "pass", "pass", "none", 350, 600, screen, background_image,)
+player = player("Player", "pass", 10, 10, 20, "Walker", "pass", "pass", "pass", "pass", "pass", "pass", "none", 350, 600, screen, background_hitbox)
 
 
 #Platform rects
@@ -41,7 +43,7 @@ def background():
 mixer.music.load("Music.mp3") 
   
 # Setting the volume 
-mixer.music.set_volume(0.7) 
+mixer.music.set_volume(0.2) 
   
 # Start playing the song 
 mixer.music.play() 

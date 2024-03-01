@@ -150,6 +150,7 @@ def generate_ground(length):
     #ground_image = pygame.display.set_mode((700, 700))
     #ground_image = pygame.image.load("Tiles\Tile-01.png")
     ground_image = pygame.Surface((length * 48, 700))
+    ground_hitbox = []
     x = 0
     y = 500
     
@@ -157,22 +158,27 @@ def generate_ground(length):
     for tile in groundtiles:
         if tile[1] == "Flat":
             ground_image.blit(tile[0],(x,y))
+            ground_hitbox.append(pygame.Rect(x, y, 22, 100))
             x += 22
         if tile[1] == "Down":
             if y > 650:
                 ground_image.blit(pygame.image.load("Tiles\Tile-01.png"),(x,y))
+                ground_hitbox.append(pygame.Rect(x, y, 22, 100))
                 x += 22
             else:
                 ground_image.blit(tile[0],(x,y))
+                ground_hitbox.append(pygame.Rect(x, y, 44, 100))
                 y += 20
                 x += 44
         if tile[1] == "Up":
             if y < 400:
                 ground_image.blit(pygame.image.load("Tiles\Tile-01.png"),(x,y))
+                ground_hitbox.append(pygame.Rect(x, y, 22, 100))
                 x += 22
             else:
                 y -= 14
                 ground_image.blit(tile[0],(x,y))
+                ground_hitbox.append(pygame.Rect(x, y, 22, 100))
                 x += 22
         #print(y)
         #x += 24
@@ -182,5 +188,7 @@ def generate_ground(length):
             
         #add somthing that add's all of the different tiles to a hitbox list that can be plugged into the
         #   player class
+            
+
          
-    return ground_image
+    return [ground_image,ground_hitbox]

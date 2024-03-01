@@ -5,7 +5,7 @@ from background import*
 class player:
     def __init__ (self, name, picture, speed, weapon, health, type_Enemy,
                   death_Animation, death_Sound, movement_Sound, attack_Sound, attack_Animation,
-                  movement_Animation, armour_Type, spawn_X, spawn_Y, screen, background_image):
+                  movement_Animation, armour_Type, spawn_X, spawn_Y, screen, background_hitbox):
         self.name = name
         self.picture = picture
         self.speed = speed
@@ -40,6 +40,7 @@ class player:
         self.frame = 0
         self.direction = "Right"
         self.direction_change = "Right"
+        self.background_hitbox = background_hitbox
 
     def movement_Update(self):
         
@@ -99,7 +100,7 @@ class player:
     
     def detect_collision(self):
         
-        for bounding_Box in self.obstacle_rect:
+        for bounding_Box in self.background_hitbox:
             if self.Rect.colliderect(bounding_Box) == True:
                 self.current_Y = bounding_Box.top
                 return True
