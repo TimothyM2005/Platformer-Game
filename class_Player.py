@@ -41,6 +41,7 @@ class player:
         self.direction = "Right"
         self.direction_change = "Right"
         self.background_hitbox = background_hitbox
+        self.background_x = 0
 
     def movement_Update(self):
         
@@ -135,9 +136,6 @@ class player:
         if step == True:
             if self.frame > len(frames):
                 self.frame = 0
-            #print(self.frame)
-            #print(len(frames))
-            #print("step")
             self.frame = self.frame + 1  
             image = frames[self.frame - 1]
         
@@ -157,3 +155,16 @@ class player:
             image = pygame.transform.flip(image, True, False)
         
         self.screen.blit(image, (self.current_X - image.get_width()/2,self.current_Y - image.get_height()/2))
+        
+    def rolling_background(self,background_x):
+        if self.current_X > 600:
+            hitbox_update(self.background_hitbox, 5)
+            return 5
+        elif self.current_X < 100:
+            if background_x < 0:
+                hitbox_update(self.background_hitbox, -5)
+                return -5
+            else:
+                return 0
+        else:
+            return 0

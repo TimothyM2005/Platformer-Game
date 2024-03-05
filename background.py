@@ -80,9 +80,31 @@ def random_block(tile_type):
         #random_number = random.randint(7,10)
         return cave_Tiles[6]
 
-def background():
+def background(screen,ground_tiles):
+    
+    house = pygame.image.load("Misc\House-Background-01.png")
+    
     background = pygame.image.load("Backgrounds\merged-full-background.png")
-    ground_tiles = generate_ground()
+    background = pygame.transform.scale(background, (340,500))
+    length = ground_tiles.get_width()
+    print(length)
+    background_surface = pygame.Surface((length, 500))
+    tiles = int(length/background.get_width())
+    background_width = background.get_width()
+    #print(background.get_width())
+    #print(tiles)
+    ground_tiles.set_colorkey((0, 0, 0)) 
+    
+    for x in range(tiles):
+        #print(x*tiles)
+        background_surface.blit(background, (x*background_width, 0))
+        for y in range(0,background_width, 80):
+            background_surface.blit(house,((x*background_width + y), 300))
+        
+    background_surface.blit(ground_tiles, (0,0))
+    
+    return background_surface
+        
     
 def generate_ground(length):
     tile_amount = length - 3
@@ -136,7 +158,7 @@ def generate_ground(length):
                 if groundtiles[-x][1] == "Down":
                     tile_temp = "Down"
                     
-            print(tile_temp)
+            #print(tile_temp)
             if tile_temp == "Flat":
                 random_tile = random.choice(["Flat","Flat","Flat","Flat","Down","Up"])
                 groundtiles.append(random_block(random_tile))
@@ -147,48 +169,43 @@ def generate_ground(length):
                 random_tile = random.choice(["Flat"])
                 groundtiles.append(random_block(random_tile))
                 
-    #ground_image = pygame.display.set_mode((700, 700))
-    #ground_image = pygame.image.load("Tiles\Tile-01.png")
-    ground_image = pygame.Surface((length * 48, 700))
+    ground_image = pygame.Surface((length * 48, 500))
     ground_hitbox = []
     x = 0
-    y = 500
-    
+    y = 400
     
     for tile in groundtiles:
         if tile[1] == "Flat":
             ground_image.blit(tile[0],(x,y))
-            ground_hitbox.append(pygame.Rect(x, y, 22, 100))
+            ground_hitbox.append(pygame.Rect(x, y - 42, 22, 100))
             x += 22
         if tile[1] == "Down":
-            if y > 650:
+            if y > 450:
                 ground_image.blit(pygame.image.load("Tiles\Tile-01.png"),(x,y))
-                ground_hitbox.append(pygame.Rect(x, y, 22, 100))
+                ground_hitbox.append(pygame.Rect(x, y - 42, 22, 100))
                 x += 22
             else:
                 ground_image.blit(tile[0],(x,y))
-                ground_hitbox.append(pygame.Rect(x, y, 44, 100))
+                ground_hitbox.append(pygame.Rect(x, y - 40, 44, 100))
                 y += 20
                 x += 44
         if tile[1] == "Up":
-            if y < 400:
+            if y < 300:
                 ground_image.blit(pygame.image.load("Tiles\Tile-01.png"),(x,y))
-                ground_hitbox.append(pygame.Rect(x, y, 22, 100))
+                ground_hitbox.append(pygame.Rect(x, y - 42, 22, 100))
                 x += 22
             else:
                 y -= 14
                 ground_image.blit(tile[0],(x,y))
-                ground_hitbox.append(pygame.Rect(x, y, 22, 100))
+                ground_hitbox.append(pygame.Rect(x, y - 34, 22, 100))
                 x += 22
-        #print(y)
-        #x += 24
-        #print(x)
-        for temp in range(0, 13):
-            ground_image.blit(random.choice([pygame.image.load("Tiles\Tile-03.png"),]),(x,y+temp*22 + 12))
-            
-        #add somthing that add's all of the different tiles to a hitbox list that can be plugged into the
-        #   player class
-            
 
+        for temp in range(0, 13):
+            ground_image.blit(random.choice([pygame.image.load("Tiles\Tile-03.png"),]),(x,y+temp*22 + 12))      
          
     return [ground_image,ground_hitbox]
+
+def hitbox_update(hitboxs, step):
+    for hitbox in hitboxs:
+        hitbox[0] -= step
+     
