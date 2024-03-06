@@ -80,26 +80,66 @@ def random_block(tile_type):
         #random_number = random.randint(7,10)
         return cave_Tiles[6]
 
-def background(screen,ground_tiles):
+def background(screen,ground_tiles,ground_hitbox):
     
-    house = pygame.image.load("Misc\House-Background-01.png")
+    objects = [
+        [pygame.image.load("Misc\House-Background-01.png")],
+        [pygame.image.load("Misc\House-01.png"), -32,3],
+        [pygame.image.load("Misc\House-02.png"), -32,3],
+        [pygame.image.load("Misc\Bush-Background.png"), 10,3],
+        [pygame.image.load("Misc\Bush-Green-Foreground.png"), 10,3],
+        [pygame.image.load("Misc\Bush-Purple-Foreground.png"), 10,3],
+        #[pygame.image.load("Objects\Obj-Light-01.png"), 10,2],
+        #[pygame.image.load("Objects\Obj-Fence.png"), 10,2],
+        #[pygame.image.load("Objects\Obj-Barrel.png"), 10,1],
+        [pygame.image.load("Objects\Obj-Statue.png"), 5,3]
+    ]
     
     background = pygame.image.load("Backgrounds\merged-full-background.png")
+    
     background = pygame.transform.scale(background, (340,500))
     length = ground_tiles.get_width()
-    print(length)
     background_surface = pygame.Surface((length, 500))
     tiles = int(length/background.get_width())
     background_width = background.get_width()
-    #print(background.get_width())
-    #print(tiles)
     ground_tiles.set_colorkey((0, 0, 0)) 
     
     for x in range(tiles):
-        #print(x*tiles)
         background_surface.blit(background, (x*background_width, 0))
-        for y in range(0,background_width, 80):
-            background_surface.blit(house,((x*background_width + y), 300))
+    
+    for x in range(0,len(ground_hitbox)-10, 10):
+        
+        if ground_hitbox[x][1] == ground_hitbox[x+3][1]:
+            background_surface.blit(objects[0][0],(ground_hitbox[x][0],ground_hitbox[x][1]-32))
+            #print("house")
+            
+        placement_areas = []
+        for y in range(0,10):
+            if ground_hitbox[x + y][1] == ground_hitbox[x+ y + 1][1]:
+                placement_areas.append(y)
+        #print(placement_areas)
+        
+        print(len(placement_areas))
+        
+        if len(placement_areas) > 2:
+            
+            while len(placement_areas) > 2:
+                print(len(placement_areas))
+                random_obj = random.randint(1,len(objects) - 1)
+                if objects[random_obj][2] > len(placement_areas):
+                    background_surface.blit(objects[random_obj][0],(ground_hitbox[x+5][0],ground_hitbox[x+5][1] + objects[random_obj][1]))
+                    
+                    
+                    #for x in range(objects[random_obj][2]):
+                    #    print("hi")
+                    #    placement_areas.pop()
+                    
+                else:
+                    placement_areas.pop()
+        
+        #background_surface.blit(objects[0],(ground_hitbox[x][0],ground_hitbox[x][1]-32))
+        #background_surface.blit(objects[random_obj][0],(ground_hitbox[x+5][0],ground_hitbox[x+5][1] + objects[random_obj][1]))
+        
         
     background_surface.blit(ground_tiles, (0,0))
     
@@ -124,7 +164,7 @@ def generate_ground(length):
                 if groundtiles[-x][1] == "Down":
                     tile_temp = "Down"
             if tile_temp == "Flat":
-                random_tile = random.choice(["Flat","Flat","Flat","Flat","Down","Up"])
+                random_tile = random.choice(["Flat","Flat","Flat","Flat","Flat","Flat","Flat","Flat","Down","Up"])
                 groundtiles.append(random_block(random_tile))
             if tile_temp == "Down":
                 random_tile = random.choice(["Flat"])
@@ -141,7 +181,7 @@ def generate_ground(length):
                 if groundtiles[-x][1] == "Up":
                     tile_temp = "Up"
             if tile_temp == "Flat":
-                random_tile = random.choice(["Flat","Flat","Flat","Flat","Down","Up"])
+                random_tile = random.choice(["Flat","Flat","Flat","Flat","Flat","Flat","Flat","Flat","Down","Up"])
                 groundtiles.append(random_block(random_tile))
             if tile_temp == "Down":
                 random_tile = random.choice(["Flat"])
@@ -160,7 +200,7 @@ def generate_ground(length):
                     
             #print(tile_temp)
             if tile_temp == "Flat":
-                random_tile = random.choice(["Flat","Flat","Flat","Flat","Down","Up"])
+                random_tile = random.choice(["Flat","Flat","Flat","Flat","Flat","Flat","Flat","Flat","Down","Up"])
                 groundtiles.append(random_block(random_tile))
             if tile_temp == "Down":
                 random_tile = random.choice(["Flat"])

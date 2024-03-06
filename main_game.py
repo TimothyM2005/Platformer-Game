@@ -14,7 +14,7 @@ running = True
 ground = generate_ground(100)
 ground_image = ground[0]
 background_hitbox = ground[1]
-background = background(screen,ground_image)
+background = background(screen,ground_image,background_hitbox)
 
 #class initialize
 walker = enemy("Walker", "pass", 10, 2, 2, "Walker", "pass", "pass", "pass", "pass", "pass", "pass", "none", 150, 391, screen)

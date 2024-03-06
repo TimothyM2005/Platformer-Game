@@ -25,6 +25,7 @@ class enemy:
         self.Rect = pygame.Rect(self.current_X, self.current_Y, 10,10)
         self.movement = 1
         self.screen = screen
+        self.cooldown = 0
 
         """
         Movement Update -> (updated X and Y coordinates)
@@ -88,7 +89,12 @@ class enemy:
     def attack(self, target):
         #print(self.Rect.colliderect(target))
         target = pygame.Rect(target[0], target[1] + 12, target[2], target[3])
-        if self.Rect.colliderect(target):
-            return self.damage
+        if self.cooldown <= 0:
+            if self.Rect.colliderect(target):
+                self.cooldown += 100
+                return self.damage
+            else:
+                return 0
         else:
+            self.cooldown -= 1
             return 0
