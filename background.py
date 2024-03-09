@@ -53,7 +53,7 @@ cave_Tiles = [
     [pygame.image.load("Tiles\Tile-12.png"),"Flat"],
     [pygame.image.load("Tiles\Tile-16.png"),"Flat"],
     [pygame.image.load("Tiles\Tile-14.png"),"Up"],
-    [pygame.image.load("Tiles\Tile-21.png"),"Down"],
+    [pygame.image.load("Tiles\Tile-14-Inverted.png"),"Down"],
     ]
 
 grass_Tiles_green =[
@@ -83,16 +83,16 @@ def random_block(tile_type):
 def background(screen,ground_tiles,ground_hitbox):
     
     objects = [
-        [pygame.image.load("Misc\House-Background-01.png"),-32,3, "house"],
-        [pygame.image.load("Misc\House-01.png"), -32,3, "house"],
-        [pygame.image.load("Misc\House-02.png"), -32,3, "Short House"],
-        [pygame.image.load("Misc\Bush-Background.png"), 10,3, "Bush"],
-        [pygame.image.load("Misc\Bush-Green-Foreground.png"), 10,3, "Bush"],
-        [pygame.image.load("Misc\Bush-Purple-Foreground.png"), 10,3, "Bush"],
-        [pygame.image.load("Objects\Obj-Light-01.png"), 10,3, "Lamp"],
-        [pygame.image.load("Objects\Obj-Fence.png"), 10,3, "Fence"],
-        [pygame.image.load("Objects\Obj-Barrel.png"), 10,3, "Barrel"],
-        [pygame.image.load("Objects\Obj-Statue.png"), 5,3, "Statue"],
+        [pygame.image.load("Misc\House-Background-01.png"),-32,5, "house"],
+        [pygame.image.load("Misc\House-01.png"), -32,5, "house"],
+        [pygame.image.load("Misc\House-02.png"), -12,5, "Short House"],
+        [pygame.image.load("Misc\Bush-Background.png"), 28,5, "Bush"],
+        [pygame.image.load("Misc\Bush-Green-Foreground.png"), 28,5, "Bush"],
+        [pygame.image.load("Misc\Bush-Purple-Foreground.png"), 28,5, "Bush"],
+        [pygame.image.load("Objects\Obj-Light-01.png"), 20,5, "Lamp"],
+        [pygame.image.load("Objects\Obj-Fence.png"), 24,5, "Fence"],
+        [pygame.image.load("Objects\Obj-Barrel.png"), 34,5, "Barrel"],
+        [pygame.image.load("Objects\Obj-Statue.png"), 0,5, "Statue"],
     ]
     
     background = pygame.image.load("Backgrounds\merged-full-background.png")
@@ -107,12 +107,14 @@ def background(screen,ground_tiles,ground_hitbox):
     for x in range(tiles):
         background_surface.blit(background, (x*background_width, 0))
     
+    decorate_background(background_surface, objects, ground_hitbox)
+    decorate_background(background_surface, objects, ground_hitbox)  
+
     for x in range(0,len(ground_hitbox)-10, 10):
         
         if ground_hitbox[x][1] == ground_hitbox[x+3][1]:
             background_surface.blit(objects[0][0],(ground_hitbox[x][0],ground_hitbox[x][1]-32))
-    
-    decorate_background(background_surface, objects, ground_hitbox)        
+          
     generate_platforms(background_surface, cave_Tiles,ground_hitbox, tiles)
         
     background_surface.blit(ground_tiles, (0,0))
@@ -128,9 +130,9 @@ def decorate_background(background_surface, decoration_tiles, ground_hitbox):
             if ground_hitbox[x + y][1] == ground_hitbox[x+ y + 1][1]:
                 placement_areas.append(y)
             
-        print(len(placement_areas))
+        #print(len(placement_areas))
         placement_areas.reverse()
-        print(placement_areas)
+        #print(placement_areas)
             
         if len(placement_areas) > 0:  # Checks to make sure the list is not empty
             while len(placement_areas) > 0: #Maks sure to only run the placement if there is somewhere to place
@@ -138,23 +140,20 @@ def decorate_background(background_surface, decoration_tiles, ground_hitbox):
                 if len(placement_areas) >= 3: #Maks sure to only run
                     print("Attempting to generate a decoration")
                     random_obj = random.randint(1,len(decoration_tiles) - 1)
-                    print(decoration_tiles[random_obj][2])
-                    print(len(placement_areas))
-                    print(decoration_tiles[random_obj][2] > len(placement_areas))
+                    #print(decoration_tiles[random_obj][2])
+                    #print(len(placement_areas))
+                    #print(decoration_tiles[random_obj][2] > len(placement_areas))
                     if decoration_tiles[random_obj][2] < len(placement_areas):
                         background_surface.blit(decoration_tiles[random_obj][0],(ground_hitbox[x][0],ground_hitbox[x++placement_areas[-1]][1] + decoration_tiles[random_obj][1]))
-                        print("Generated decoration: " + decoration_tiles[random_obj][3] + " at: " + str(ground_hitbox[x+5][0]) + "Removing: " + str(decoration_tiles[random_obj][2]) + " Tiles")
+                        print("Generated decoration: " + decoration_tiles[random_obj][3] + " at: " + str(ground_hitbox[x+5][0]) + " Removing: " + str(decoration_tiles[random_obj][2]) + " Tiles")
                         
-                        print(decoration_tiles[random_obj][2])
+                        #print(decoration_tiles[random_obj][2])
                         for x in range(decoration_tiles[random_obj][2]):
                             print("Removing: " + str(placement_areas) + " from the placement list")
                             placement_areas.pop()
-                    
+
+                print(" ")
                 placement_areas.pop()
-            
-            #background_surface.blit(decoration_tiles[0][0],(ground_hitbox[x][0],ground_hitbox[x][1]-32))
-            #background_surface.blit(decoration_tiles[random_obj][0],(ground_hitbox[x+5][0],ground_hitbox[x+5][1] + decoration_tiles[random_obj][1]))
-    
 
 def generate_platforms(background_surface, ground_tiles, ground_hitbox, tiles):
     platform_hitbox = []
@@ -237,6 +236,9 @@ def generate_ground(length):
     x = 0
     y = 400
     
+    for temp in range(0, 13):
+            ground_image.blit(random.choice([pygame.image.load("Tiles\Tile-03.png"),]),(0,y+temp*22 + 10))
+    
     for tile in groundtiles:
         if tile[1] == "Flat":
             ground_image.blit(tile[0],(x,y))
@@ -249,9 +251,9 @@ def generate_ground(length):
                 x += 22
             else:
                 ground_image.blit(tile[0],(x,y))
-                ground_hitbox.append(pygame.Rect(x, y - 40, 44, 100))
-                y += 20
-                x += 44
+                ground_hitbox.append(pygame.Rect(x, y - 34, 22, 100))
+                y += 14
+                x += 22
         if tile[1] == "Up":
             if y < 300:
                 ground_image.blit(pygame.image.load("Tiles\Tile-01.png"),(x,y))
@@ -264,7 +266,7 @@ def generate_ground(length):
                 x += 22
 
         for temp in range(0, 13):
-            ground_image.blit(random.choice([pygame.image.load("Tiles\Tile-03.png"),]),(x,y+temp*22 + 12))      
+            ground_image.blit(random.choice([pygame.image.load("Tiles\Tile-03.png"),]),(x,y+temp*22 + 10))      
          
     return [ground_image,ground_hitbox]
 

@@ -32,7 +32,7 @@ obstacle_rect = [
 mixer.music.load("Music.mp3") 
   
 # Setting the volume 
-mixer.music.set_volume(0.2) 
+mixer.music.set_volume(0) 
   
 # Start playing the song 
 mixer.music.play() 
