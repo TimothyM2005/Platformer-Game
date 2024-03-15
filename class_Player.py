@@ -26,14 +26,8 @@ class player:
         self.Rect = pygame.Rect(self.current_X, self.current_Y, 10,10)
         self.movement = 1
         self.screen = screen
-        self.obstacle_rect = [
-            pygame.Rect(0, 580, 700, 100), 
-            pygame.Rect(100, 380, 100, 10),
-            pygame.Rect(300, 480, 100, 10),
-            pygame.Rect(500, 280, 100, 10)
-        ]
         self.fall_speed = 0
-        self.gravity = 0.35
+        self.gravity = 0.5
         self.screen_height = 700
         self.character_height = 20
         self.jump_Cooldown = 0
@@ -42,11 +36,13 @@ class player:
         self.direction_change = "Right"
         self.background_hitbox = background_hitbox
         self.background_x = 0
+        self.temp_x = 0
+        self.temp_y = 0
 
     def movement_Update(self):
         
-        temp_x = self.current_X
-        temp_y = self.current_Y
+        self.temp_x = self.current_X
+        self.temp_y = self.current_Y
         
         self.Rect = pygame.Rect(self.current_X, self.current_Y, 10,10)
 
@@ -81,7 +77,7 @@ class player:
         
         time.sleep(0.01)
         
-        if self.current_X != temp_x or self.current_Y != temp_y:
+        if self.current_X != self.temp_x or self.current_Y != self.temp_y:
             self.update_Animation(True)
         else:
             self.update_Animation(False)
@@ -157,13 +153,15 @@ class player:
         self.screen.blit(image, (self.current_X - image.get_width()/2,self.current_Y - image.get_height()/2))
         
     def rolling_background(self,background_x):
-        if self.current_X > 600:
-            hitbox_update(self.background_hitbox, 5)
-            return 5
-        elif self.current_X < 100:
+        if self.current_X > 600 and self.temp_x != self.current_X:
+            hitbox_update(self.background_hitbox, 1)
+            self.current_X -= 1
+            return 1
+        elif self.current_X < 100 and self.temp_x != self.current_X:
             if background_x < 0:
-                hitbox_update(self.background_hitbox, -5)
-                return -5
+                hitbox_update(self.background_hitbox, -1)
+                self.current_X += 1
+                return -1
             else:
                 return 0
         else:
