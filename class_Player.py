@@ -38,15 +38,16 @@ class player:
         self.background_x = 0
         self.temp_x = 0
         self.temp_y = 0
-        self.current_animation = "idle"
         self.animation_dictionary = {
-                "Idle": self.animate("_Idle.png"),
+                "idle": self.animate("_Idle.png"),
                 "walk": self.animate("_Run.png"),
                 "attack": self.animate("_Attack.png"),
-                "jump": self.animate("/Outline/120x80_PNGSheets/_Jump.png"),
-                "roll": self.animate("/Outline/120x80_PNGSheets/_Roll.png"),
-                "crouch": self.animate("/Outline/120x80_PNGSheets/_Crouch.png")
+                "jump": self.animate("Outline/120x80_PNGSheets/_Jump.png"),
+                "roll": self.animate("Outline/120x80_PNGSheets/_Roll.png"),
+                "crouch": self.animate("Outline/120x80_PNGSheets/_Crouch.png")
                 }
+        self.current_animation = self.animation_dictionary["idle"]
+        self.no_current = False
 
     def movement_Update(self):
         
@@ -86,10 +87,48 @@ class player:
         
         time.sleep(0.01)
         
+        #print(self.current_animation)
+        #print(self.frame)
+        print(self.no_current)
+        
+        if self.is_moving() and self.in_air == False:
+            self.currentAnimation("idle")
+        elif self.in_air == True:
+            self.currentAnimation("jump")
+        elif self.in_air == False and self.is_moving == True:
+            self.currentAnimation("walk")
+            
+        if self.no_current == False:
+            self.update_Animation(self.current_animation, self.frame)
+
+    def currentAnimation(self, action):
+        #Detect for idle walk attack jump roll crouch
+        if self.no_current == True:
+            self.step = 0
+            self.no_current = False
+            if action == "jump":
+                self.update_Animation(self.animation_dictionary["jump"], self.step)
+            if action == "walk":
+                self.update_Animation(self.animation_dictionary["walk"], self.step)
+            if action == "idle":
+                self.update_Animation(self.animation_dictionary["idle"], self.step)
+            if action == "attack":
+                self.update_Animation(self.animation_dictionary["attack"], self.step)
+            if action == "roll":
+                self.update_Animation(self.animation_dictionary["roll"], self.step)
+            if action == "crouch":
+                self.update_Animation(self.animation_dictionary["crouch"], self.step)
+            
+    def is_moving(self):
+        isMoving = False
         if self.current_X != self.temp_x or self.current_Y != self.temp_y:
-            self.update_Animation(True)
-        else:
-            self.update_Animation(False)
+            isMoving = True
+            
+    def in_air(self): 
+        inAir = False
+        if self.detect_collision(self) == False:
+            inAir = True
+        return inAir
         
     def health_Update(self, health_Change):
         self.health -= int(health_Change)
@@ -105,7 +144,6 @@ class player:
         self.animate("_Attack.png")
     
     def detect_collision(self):
-        
         for bounding_Box in self.background_hitbox:
             if self.Rect.colliderect(bounding_Box) == True:
                 self.current_Y = bounding_Box.top
@@ -132,27 +170,9 @@ class player:
             
         return frames_image
             
-    def update_Animation(self,step):
+    def update_Animation(self,sheet,step):
         
-        frames = self.animate("_Run.png")
-        frames_idle = self.animate("_idle.png")
-        image = ""
-        
-        if step == True:
-            if self.frame > len(frames):
-                self.frame = 0
-            self.frame = self.frame + 1  
-            image = frames[self.frame - 1]
-        
-        if step == False:
-            if self.frame > len(frames_idle):
-                self.frame = 0
-            self.frame = self.frame + 1
-            image = frames_idle[self.frame - 1]
-        
-        if len(frames) <= self.frame:
-            self.frame = 0
-            
+        image = sheet[step]
             
         if self.direction_change == self.direction == "Right":
             image = pygame.transform.flip(image, True, False)
@@ -160,6 +180,11 @@ class player:
             image = pygame.transform.flip(image, True, False)
         
         self.screen.blit(image, (self.current_X - image.get_width()/2,self.current_Y - image.get_height()/2))
+        
+        if len(sheet)-1 <= step:
+            self.no_current = False
+        else:
+            self.frame += 1
         
     def rolling_background(self,background_x):
         if self.current_X > 600 and self.temp_x != self.current_X:
