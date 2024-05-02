@@ -16,13 +16,9 @@ ground_image = ground[0]
 background_hitbox = ground[1]
 background = background(screen,ground_image,background_hitbox)
 
-
-
-
 #class initialize
 walker = enemy("Walker", "pass", 10, 2, 2, "Walker", "pass", "pass", "pass", "pass", "pass", "pass", "none", 150, 391, screen)
 player = player("Player", "pass", 10, 10, 20, "Walker", "pass", "pass", "pass", "pass", "pass", "pass", "none", 350, 300, screen, background_hitbox)
-
 
 #Platform rects
 obstacle_rect = [
@@ -62,7 +58,6 @@ while running:
     clock.tick(20)  # limits FPS to 20
 pygame.quit()
 
-
 """
     
 Make it so that the player is in the rain during the game, and the checkpoints are shacks that have
@@ -86,7 +81,7 @@ body after a battle between the two of them. Together they now control the thron
 perpetual rainfall.
 
 As a lone adventurer, players find themselves guided by the winds to Windkeep, the ancient castle where the
-twin sisters once trained. Along their journey, they uncover fragments of the past and whispers of the wind,
+twin sisters once trained. Along their journey, they uncover fragments of the past and the whispers of the wind,
 revealing the tragic history of the twins and their connection to the perpetual storm that ravages Windkeep.
 
 Within the land's of Windkeep, players confront challenges crafted by the twisted minds of Leona and Cassandra,

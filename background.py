@@ -136,23 +136,23 @@ def decorate_background(background_surface, decoration_tiles, ground_hitbox):
             
         if len(placement_areas) > 0:  # Checks to make sure the list is not empty
             while len(placement_areas) > 0: #Maks sure to only run the placement if there is somewhere to place
-                print("Length of placement areas: " + str(len(placement_areas)))
+                #print("Length of placement areas: " + str(len(placement_areas)))
                 if len(placement_areas) >= 3: #Maks sure to only run
-                    print("Attempting to generate a decoration")
+                    #print("Attempting to generate a decoration")
                     random_obj = random.randint(1,len(decoration_tiles) - 1)
                     #print(decoration_tiles[random_obj][2])
                     #print(len(placement_areas))
                     #print(decoration_tiles[random_obj][2] > len(placement_areas))
                     if decoration_tiles[random_obj][2] < len(placement_areas):
                         background_surface.blit(decoration_tiles[random_obj][0],(ground_hitbox[x][0],ground_hitbox[x++placement_areas[-1]][1] + decoration_tiles[random_obj][1]))
-                        print("Generated decoration: " + decoration_tiles[random_obj][3] + " at: " + str(ground_hitbox[x+5][0]) + " Removing: " + str(decoration_tiles[random_obj][2]) + " Tiles")
+                        #print("Generated decoration: " + decoration_tiles[random_obj][3] + " at: " + str(ground_hitbox[x+5][0]) + " Removing: " + str(decoration_tiles[random_obj][2]) + " Tiles")
                         
                         #print(decoration_tiles[random_obj][2])
                         for x in range(decoration_tiles[random_obj][2]):
-                            print("Removing: " + str(placement_areas) + " from the placement list")
+                            #print("Removing: " + str(placement_areas) + " from the placement list")
                             placement_areas.pop()
 
-                print(" ")
+                #print(" ")
                 placement_areas.pop()
 
 def generate_platforms(background_surface, ground_tiles, ground_hitbox, tiles):
@@ -160,7 +160,7 @@ def generate_platforms(background_surface, ground_tiles, ground_hitbox, tiles):
     for x in range(10,len(ground_hitbox)-10, 10):
         does_platform = random.randint(0,1)
         if does_platform == 1:
-            print("Generated platform at: " + str(x))
+            #print("Generated platform at: " + str(x))
             platform_hight = ground_hitbox[x][1] - 100
             for y in range(8):
                 background_surface.blit(ground_tiles[0][0],(ground_hitbox[x + y][0],platform_hight))

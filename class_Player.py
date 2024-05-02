@@ -27,7 +27,7 @@ class player:
         self.movement = 1
         self.screen = screen
         self.fall_speed = 0
-        self.gravity = 0.5
+        self.gravity = 0.75
         self.screen_height = 700
         self.character_height = 20
         self.jump_Cooldown = 0
@@ -38,6 +38,15 @@ class player:
         self.background_x = 0
         self.temp_x = 0
         self.temp_y = 0
+        self.current_animation = "idle"
+        self.animation_dictionary = {
+                "Idle": self.animate("_Idle.png"),
+                "walk": self.animate("_Run.png"),
+                "attack": self.animate("_Attack.png"),
+                "jump": self.animate("/Outline/120x80_PNGSheets/_Jump.png"),
+                "roll": self.animate("/Outline/120x80_PNGSheets/_Roll.png"),
+                "crouch": self.animate("/Outline/120x80_PNGSheets/_Crouch.png")
+                }
 
     def movement_Update(self):
         
