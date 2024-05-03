@@ -90,43 +90,57 @@ class player:
         #print(self.current_animation)
         #print(self.frame)
         print(self.no_current)
+        #print(self.is_moving())
+        #print(self.in_air())
         
-        if self.is_moving() and self.in_air == False:
+        if self.is_moving() == False and self.in_air() == False:
+            #print("idle")
             self.currentAnimation("idle")
-        elif self.in_air == True:
+        elif self.in_air() == True:
             self.currentAnimation("jump")
-        elif self.in_air == False and self.is_moving == True:
-            self.currentAnimation("walk")
-            
-        if self.no_current == False:
-            self.update_Animation(self.current_animation, self.frame)
+            #print("jump")
+        elif self.in_air() == False and self.is_moving() == True:
+            self.currentAnimation("walk")    
+            #print("walk") 
+        if self.no_current == True:
+            print("update")
+            self.update_Animation(self.current_animation, self.step)
 
     def currentAnimation(self, action):
         #Detect for idle walk attack jump roll crouch
-        if self.no_current == True:
+        #print(self.no_current)
+        if self.no_current == False:
             self.step = 0
-            self.no_current = False
+            self.no_current = True
+            print(action)
             if action == "jump":
                 self.update_Animation(self.animation_dictionary["jump"], self.step)
+                self.current_animation = self.animation_dictionary["jump"]
             if action == "walk":
                 self.update_Animation(self.animation_dictionary["walk"], self.step)
+                self.current_animation = self.animation_dictionary["walk"]
             if action == "idle":
                 self.update_Animation(self.animation_dictionary["idle"], self.step)
+                self.current_animation = self.animation_dictionary["idle"]
             if action == "attack":
                 self.update_Animation(self.animation_dictionary["attack"], self.step)
+                self.current_animation = self.animation_dictionary["attack"]
             if action == "roll":
                 self.update_Animation(self.animation_dictionary["roll"], self.step)
+                self.current_animation = self.animation_dictionary["roll"]
             if action == "crouch":
                 self.update_Animation(self.animation_dictionary["crouch"], self.step)
+                self.current_animation = self.animation_dictionary["crouch"]
             
     def is_moving(self):
         isMoving = False
         if self.current_X != self.temp_x or self.current_Y != self.temp_y:
             isMoving = True
+        return isMoving
             
     def in_air(self): 
         inAir = False
-        if self.detect_collision(self) == False:
+        if self.detect_collision() == False:
             inAir = True
         return inAir
         
@@ -173,6 +187,8 @@ class player:
     def update_Animation(self,sheet,step):
         
         image = sheet[step]
+        
+        #print(image)
             
         if self.direction_change == self.direction == "Right":
             image = pygame.transform.flip(image, True, False)
@@ -181,10 +197,13 @@ class player:
         
         self.screen.blit(image, (self.current_X - image.get_width()/2,self.current_Y - image.get_height()/2))
         
-        if len(sheet)-1 <= step:
+        #print(len(sheet))
+        #print(step)
+        
+        if len(sheet)-2 <= step:
             self.no_current = False
         else:
-            self.frame += 1
+            self.step += 1
         
     def rolling_background(self,background_x):
         if self.current_X > 600 and self.temp_x != self.current_X:
