@@ -1,4 +1,4 @@
-from class_Enemy import enemy
+from class_Enemy_Slime import enemy_Slime
 from class_Player import player
 from class_Platform import platform
 from background import generate_ground
@@ -17,16 +17,8 @@ background_hitbox = ground[1]
 background = background(screen,ground_image,background_hitbox)
 
 #class initialize
-walker = enemy("Walker", "pass", 10, 2, 2, "Walker", "pass", "pass", "pass", "pass", "pass", "pass", "none", 150, 391, screen)
-player = player("Player", "pass", 10, 10, 20, "Walker", "pass", "pass", "pass", "pass", "pass", "pass", "none", 350, 300, screen, background_hitbox)
-
-#Platform rects
-obstacle_rect = [
-    pygame.Rect(0, 600, 700, 100), 
-    pygame.Rect(100, 400, 100, 10),
-    pygame.Rect(300, 500, 100, 10),
-    pygame.Rect(500, 300, 100, 10)
-]
+slime = enemy_Slime("Walker", 150, 400, screen, background_hitbox)
+player = player("Player", "pass", 10, 10, 20,"none", 350, 300, screen, background_hitbox)
     
 mixer.music.load("Music.mp3") 
   
@@ -47,11 +39,11 @@ while running:
     bk_x -= player.rolling_background(bk_x)
     screen.blit(background,(bk_x ,0))
     player.display_Health()
-    #walker.movement_Update(obstacle_rect)
     player.movement_Update()
+    slime.movement_Update()
     #running = player.health_Update(walker.attack(player.reference_Rect()))
     
-    #player.attack()
+    player.attack()
     
     pygame.display.update()
     
