@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "Platformer-Game",
+			"path": "."
+		},
+		{
+			"name": "Slimes",
+			"path": "../../../../Downloads/Slimes/Slimes"
+		}
+	],
+	"settings": {}
+}

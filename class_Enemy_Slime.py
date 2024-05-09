@@ -52,7 +52,7 @@ class enemy_Slime:
         image = self.anitmations["idle3"][0]
         self.calculate_movement()
         self.detect_collision()
-        self.screen.blit(image, (self.current_X - image.get_width()/2,self.current_Y - image.get_height()/2))
+        self.screen.blit(image, (self.current_X - image.get_width()/2,self.current_Y))
         
     def calculate_movement(self):
         self.current_X = self.current_X + 1
