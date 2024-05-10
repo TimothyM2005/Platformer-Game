@@ -1,6 +1,14 @@
 #from main_game import screen
 import pygame
-from background import*
+
+
+"""
+    -Add animations for the slime
+    -work on making an attack
+    -add an actual working movement system to the player including jumps
+    -add other colors of slime to that have different stats
+    
+"""
 
 class enemy_Slime:
     def __init__ (self, name, spawn_X, spawn_Y, screen, background_hitbox):
@@ -16,15 +24,7 @@ class enemy_Slime:
         self.Rect = pygame.Rect(self.current_X, self.current_Y, 17,17)
         self.fall_speed = 0
         self.gravity = 0.5
-        self.speed = {
-            "pink": 2,
-            "red": 3,
-            "yellow": 4,
-            "blue": 5,
-            "green": 6, 
-            "brown": 7,
-            "grey": 8
-        }
+        self.speed = 5
         
         #Animation
         self.anitmations = {
@@ -38,6 +38,10 @@ class enemy_Slime:
                 "swallow": 10
             }
         
+    def hitbox_update(self, hitboxs, step):
+        for hitbox in hitboxs:
+            hitbox[0] -= step
+        
     def animate(self, image): #Returns a list of frames for the given animation
         slime_image = pygame.image.load(image)
         frames = slime_image.get_width()/80
@@ -48,6 +52,49 @@ class enemy_Slime:
             
         return frames_image
     
+    def currentAnimation(self, action):
+        #Detect for idle walk attack jump roll crouch
+        if self.no_current == False:
+            self.step = 0
+            self.no_current = True
+            if action == "jump":
+                self.update_Animation(self.animation_dictionary["jump"], self.step)
+                self.current_animation = self.animation_dictionary["jump"]
+            if action == "walk":
+                self.update_Animation(self.animation_dictionary["walk"], self.step)
+                self.current_animation = self.animation_dictionary["walk"]
+            if action == "idle":
+                self.update_Animation(self.animation_dictionary["idle"], self.step)
+                self.current_animation = self.animation_dictionary["idle"]
+            if action == "attack":
+                self.update_Animation(self.animation_dictionary["attack"], self.step)
+                self.current_animation = self.animation_dictionary["attack"]
+            if action == "roll":
+                self.update_Animation(self.animation_dictionary["roll"], self.step)
+                self.current_animation = self.animation_dictionary["roll"]
+            if action == "crouch":
+                self.update_Animation(self.animation_dictionary["crouch"], self.step)
+                self.current_animation = self.animation_dictionary["crouch"]
+    
+    def update_Animation(self,sheet,step):
+        
+        image = sheet[step]
+            
+        if self.direction_change == self.direction == "Right":
+            image = pygame.transform.flip(image, True, False)
+        elif self.direction_change == self.direction == "Left":
+            image = pygame.transform.flip(image, True, False)
+        
+        self.screen.blit(image, (self.current_X - image.get_width()/2,self.current_Y - image.get_height()/2))
+        
+        #print(len(sheet))
+        #print(step)
+        
+        if len(sheet)-2 <= step:
+            self.no_current = False
+        else:
+            self.step += 1
+    
     def movement_Update(self):
         image = self.anitmations["idle3"][0]
         self.calculate_movement()
@@ -56,13 +103,13 @@ class enemy_Slime:
         
     def calculate_movement(self):
         self.current_X = self.current_X + 1
-        hitbox_update(self.background_hitbox, 1)
+        #self.hitbox_update(self.background_hitbox, 1)
     
     def detect_collision(self):
         for bounding_Box in self.background_hitbox:
             if self.Rect.colliderect(bounding_Box) == True:
                 print(self.current_Y)
-                self.current_Y = bounding_Box.top
+                self.current_Y = bounding_Box.top + 26
                 return True
     
     def back_Forth(self, obstacle_Bounding):
